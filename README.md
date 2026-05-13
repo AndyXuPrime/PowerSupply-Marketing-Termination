@@ -49,3 +49,5 @@ H2 JDBC URL：`jdbc:h2:file:./data/termination-db`
 - `02-architecture-design.md`
 - `03-implementation-plan.md`
 - `04-test-record.md`
+- `05-current-status.md`
+- `06-issues-and-solutions.md`
