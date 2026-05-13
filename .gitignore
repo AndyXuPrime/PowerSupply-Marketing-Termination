@@ -1,0 +1,10 @@
+.mvn/
+target/
+*.class
+*.log
+*.iml
+.idea/
+.vscode/
+.codex_deps/
+.DS_Store
+Thumbs.db
