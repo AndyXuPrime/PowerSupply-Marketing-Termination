@@ -72,7 +72,7 @@ public class TerminationPageController {
     @GetMapping("/applications/{id}")
     public String detail(@PathVariable Long id, Model model) {
         TerminationApplication application = service.get(id);
-        model.addAttribute("application", application);
+        model.addAttribute("terminationApplication", application);
         model.addAttribute("statuses", WorkflowStatus.values());
         return "applications/detail";
     }

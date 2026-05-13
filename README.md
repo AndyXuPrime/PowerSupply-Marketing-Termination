@@ -31,7 +31,7 @@
 ## 本地运行
 
 ```powershell
-mvn spring-boot:run
+mvn -s .mvn/settings.xml spring-boot:run
 ```
 
 启动后访问：
@@ -41,13 +41,23 @@ mvn spring-boot:run
 
 H2 JDBC URL：`jdbc:h2:file:./data/termination-db`
 
+## 测试验证
+
+```powershell
+mvn -s .mvn/settings.xml test
+```
+
+当前自动化测试覆盖服务层业务规则、REST 接口、页面渲染和 Spring Boot 启动冒烟场景。该测试范围面向课程设计交付，重点验证“无表临时用电终止”业务闭环可准确跑通。
+
 ## 过程文档
 
 课程设计过程性文档保存在 `docs/process/`：
 
+- `00-document-control.md`
 - `01-requirements-analysis.md`
 - `02-architecture-design.md`
 - `03-implementation-plan.md`
 - `04-test-record.md`
 - `05-current-status.md`
 - `06-issues-and-solutions.md`
+- `07-testing-and-verification.md`

@@ -8,16 +8,16 @@
 </head>
 <body>
 <div class="app-shell">
-    <header th:replace="fragments/nav :: nav('list')"></header>
+    <header th:replace="~{fragments/nav :: nav('list')}"></header>
 
-    <main class="page">
+    <main class="page" th:with="currentStatus=${terminationApplication.status}">
         <section class="page-head">
             <div>
-                <h1 th:text="${application.customerName}">申请详情</h1>
+                <h1 th:text="${terminationApplication.customerName}">申请详情</h1>
                 <p>
-                    <span th:text="${application.applicationNo}"></span>
+                    <span th:text="${terminationApplication.applicationNo}"></span>
                     <span class="muted"> · </span>
-                    <span th:text="${application.status.label}"></span>
+                    <span th:text="${currentStatus != null ? currentStatus.label : '-'}"></span>
                 </p>
             </div>
             <div class="toolbar">
@@ -34,31 +34,31 @@
             <div class="panel">
                 <div class="panel-head">
                     <h2>基本信息</h2>
-                    <span class="status" th:classappend="${application.status.name().toLowerCase()}" th:text="${application.status.label}"></span>
+                    <span class="status" th:classappend="${currentStatus != null ? currentStatus.name().toLowerCase() : 'accepted'}" th:text="${currentStatus != null ? currentStatus.label : '-'}"></span>
                 </div>
                 <div class="panel-body">
                     <div class="meta-list">
-                        <div class="meta"><div class="k">申请编号</div><div class="v" th:text="${application.applicationNo}"></div></div>
-                        <div class="meta"><div class="k">客户编号</div><div class="v" th:text="${application.customerNo}"></div></div>
-                        <div class="meta"><div class="k">联系人</div><div class="v" th:text="${application.contactName}"></div></div>
-                        <div class="meta"><div class="k">联系电话</div><div class="v" th:text="${application.contactPhone}"></div></div>
-                        <div class="meta"><div class="k">客户地址</div><div class="v" th:text="${application.customerAddress}"></div></div>
-                        <div class="meta"><div class="k">供电单位</div><div class="v" th:text="${application.powerSupplyUnit}"></div></div>
-                        <div class="meta"><div class="k">项目名称</div><div class="v" th:text="${application.projectName}"></div></div>
-                        <div class="meta"><div class="k">合同号</div><div class="v" th:text="${application.contractNo}"></div></div>
-                        <div class="meta"><div class="k">约定期限</div><div class="v" th:text="${application.agreedDays + ' 天'}"></div></div>
-                        <div class="meta"><div class="k">预收电费</div><div class="v" th:text="${#numbers.formatDecimal(application.prepaidFee, 1, 'COMMA', 2, 'POINT')}"></div></div>
-                        <div class="meta"><div class="k">实际使用天数</div><div class="v" th:text="${application.actualDays == null ? '-' : application.actualDays}"></div></div>
-                        <div class="meta"><div class="k">申请终止时间</div><div class="v" th:text="${#temporals.format(application.requestedTerminationDate, 'yyyy-MM-dd')}"></div></div>
+                        <div class="meta"><div class="k">申请编号</div><div class="v" th:text="${terminationApplication.applicationNo}"></div></div>
+                        <div class="meta"><div class="k">客户编号</div><div class="v" th:text="${terminationApplication.customerNo}"></div></div>
+                        <div class="meta"><div class="k">联系人</div><div class="v" th:text="${terminationApplication.contactName}"></div></div>
+                        <div class="meta"><div class="k">联系电话</div><div class="v" th:text="${terminationApplication.contactPhone}"></div></div>
+                        <div class="meta"><div class="k">客户地址</div><div class="v" th:text="${terminationApplication.customerAddress}"></div></div>
+                        <div class="meta"><div class="k">供电单位</div><div class="v" th:text="${terminationApplication.powerSupplyUnit}"></div></div>
+                        <div class="meta"><div class="k">项目名称</div><div class="v" th:text="${terminationApplication.projectName}"></div></div>
+                        <div class="meta"><div class="k">合同号</div><div class="v" th:text="${terminationApplication.contractNo}"></div></div>
+                        <div class="meta"><div class="k">约定期限</div><div class="v" th:text="${terminationApplication.agreedDays + ' 天'}"></div></div>
+                        <div class="meta"><div class="k">预收电费</div><div class="v" th:text="${#numbers.formatDecimal(terminationApplication.prepaidFee, 1, 'COMMA', 2, 'POINT')}"></div></div>
+                        <div class="meta"><div class="k">实际使用天数</div><div class="v" th:text="${terminationApplication.actualDays == null ? '-' : terminationApplication.actualDays}"></div></div>
+                        <div class="meta"><div class="k">申请终止时间</div><div class="v" th:text="${#temporals.format(terminationApplication.requestedTerminationDate, 'yyyy-MM-dd')}"></div></div>
                     </div>
 
                     <div style="margin-top:14px;" class="meta">
                         <div class="k">备注 / 归档说明</div>
-                        <div class="v" th:text="${application.remark}"></div>
+                        <div class="v" th:text="${terminationApplication.remark}"></div>
                     </div>
                     <div style="margin-top:14px;" class="meta">
                         <div class="k">费用说明</div>
-                        <div class="v" th:text="${application.feeRemark}"></div>
+                        <div class="v" th:text="${terminationApplication.feeRemark}"></div>
                     </div>
                 </div>
             </div>
@@ -71,7 +71,7 @@
                     <div class="timeline">
                         <div class="timeline-item"
                              th:each="st : ${statuses}"
-                             th:classappend="${st == application.status} ? ' now' : (${st.ordinal() < application.status.ordinal()} ? ' done' : '')">
+                             th:classappend="${currentStatus != null and st == currentStatus} ? ' now' : (${currentStatus != null and st.ordinal() < currentStatus.ordinal()} ? ' done' : '')">
                             <div class="timeline-dot"></div>
                             <div>
                                 <div class="title" th:text="${st.label}"></div>
@@ -89,7 +89,7 @@
             </div>
             <div class="panel-body">
                 <div class="action-grid">
-                    <form class="action-card" th:if="${application.status.name() == 'ACCEPTED'}" method="post" th:action="@{'/applications/' + ${application.id} + '/dispatch'}">
+                    <form class="action-card" th:if="${currentStatus != null and currentStatus.name() == 'ACCEPTED'}" method="post" th:action="@{'/applications/' + ${terminationApplication.id} + '/dispatch'}">
                         <div class="action-head"><h3>勘查派工</h3></div>
                         <div class="action-body">
                             <div class="field">
@@ -102,7 +102,7 @@
                         </div>
                     </form>
 
-                    <form class="action-card" th:if="${application.status.name() == 'DISPATCHED'}" method="post" th:action="@{'/applications/' + ${application.id} + '/survey'}">
+                    <form class="action-card" th:if="${currentStatus != null and currentStatus.name() == 'DISPATCHED'}" method="post" th:action="@{'/applications/' + ${terminationApplication.id} + '/survey'}">
                         <div class="action-head"><h3>现场勘查</h3></div>
                         <div class="action-body">
                             <div class="field">
@@ -119,12 +119,12 @@
                         </div>
                     </form>
 
-                    <form class="action-card" th:if="${application.status.name() == 'FIELD_INSPECTED'}" method="post" th:action="@{'/applications/' + ${application.id} + '/contract-terminate'}">
+                    <form class="action-card" th:if="${currentStatus != null and currentStatus.name() == 'FIELD_INSPECTED'}" method="post" th:action="@{'/applications/' + ${terminationApplication.id} + '/contract-terminate'}">
                         <div class="action-head"><h3>终止合同</h3></div>
                         <div class="action-body">
                             <div class="field">
                                 <label>合同号</label>
-                                <input name="contractNo" th:value="${application.contractNo}">
+                                <input name="contractNo" th:value="${terminationApplication.contractNo}">
                             </div>
                             <div class="toolbar" style="margin-top:12px;">
                                 <button class="btn primary" type="submit">终止合同</button>
@@ -132,7 +132,7 @@
                         </div>
                     </form>
 
-                    <form class="action-card" th:if="${application.status.name() == 'CONTRACT_TERMINATED'}" method="post" th:action="@{'/applications/' + ${application.id} + '/power-off'}">
+                    <form class="action-card" th:if="${currentStatus != null and currentStatus.name() == 'CONTRACT_TERMINATED'}" method="post" th:action="@{'/applications/' + ${terminationApplication.id} + '/power-off'}">
                         <div class="action-head"><h3>停电</h3></div>
                         <div class="action-body">
                             <div class="toolbar">
@@ -141,12 +141,12 @@
                         </div>
                     </form>
 
-                    <form class="action-card" th:if="${application.status.name() == 'POWER_OFF'}" method="post" th:action="@{'/applications/' + ${application.id} + '/determine-fee'}">
+                    <form class="action-card" th:if="${currentStatus != null and currentStatus.name() == 'POWER_OFF'}" method="post" th:action="@{'/applications/' + ${terminationApplication.id} + '/determine-fee'}">
                         <div class="action-head"><h3>确定费用</h3></div>
                         <div class="action-body">
                             <div class="field">
                                 <label>实际使用天数</label>
-                                <input name="actualDays" type="number" step="0.01" th:value="${application.actualDays}">
+                                <input name="actualDays" type="number" step="0.01" th:value="${terminationApplication.actualDays}">
                             </div>
                             <div class="toolbar" style="margin-top:12px;">
                                 <button class="btn primary" type="submit">计算费用</button>
@@ -154,7 +154,7 @@
                         </div>
                     </form>
 
-                    <form class="action-card" th:if="${application.status.name() == 'FEE_DETERMINED'}" method="post" th:action="@{'/applications/' + ${application.id} + '/settle-fee'}">
+                    <form class="action-card" th:if="${currentStatus != null and currentStatus.name() == 'FEE_DETERMINED'}" method="post" th:action="@{'/applications/' + ${terminationApplication.id} + '/settle-fee'}">
                         <div class="action-head"><h3>结清费用</h3></div>
                         <div class="action-body">
                             <div class="field">
@@ -163,11 +163,11 @@
                             </div>
                             <div class="field" style="margin-top:10px;">
                                 <label>结清金额</label>
-                                <input name="settledAmount" type="number" step="0.01" th:value="${application.receivableAmount}">
+                                <input name="settledAmount" type="number" step="0.01" th:value="${terminationApplication.receivableAmount}">
                             </div>
                             <div class="field" style="margin-top:10px;">
                                 <label>欠费金额</label>
-                                <input name="arrearsAmount" type="number" step="0.01" th:value="${application.arrearsAmount}">
+                                <input name="arrearsAmount" type="number" step="0.01" th:value="${terminationApplication.arrearsAmount}">
                             </div>
                             <div class="toolbar" style="margin-top:12px;">
                                 <button class="btn primary" type="submit">完成结清</button>
@@ -175,7 +175,7 @@
                         </div>
                     </form>
 
-                    <form class="action-card" th:if="${application.status.name() == 'FEE_SETTLED'}" method="post" th:action="@{'/applications/' + ${application.id} + '/archive-info'}">
+                    <form class="action-card" th:if="${currentStatus != null and currentStatus.name() == 'FEE_SETTLED'}" method="post" th:action="@{'/applications/' + ${terminationApplication.id} + '/archive-info'}">
                         <div class="action-head"><h3>信息归档</h3></div>
                         <div class="action-body">
                             <div class="field">
@@ -188,7 +188,7 @@
                         </div>
                     </form>
 
-                    <form class="action-card" th:if="${application.status.name() == 'INFO_ARCHIVED'}" method="post" th:action="@{'/applications/' + ${application.id} + '/callback'}">
+                    <form class="action-card" th:if="${currentStatus != null and currentStatus.name() == 'INFO_ARCHIVED'}" method="post" th:action="@{'/applications/' + ${terminationApplication.id} + '/callback'}">
                         <div class="action-head"><h3>客户回访</h3></div>
                         <div class="action-body">
                             <div class="field">
@@ -201,7 +201,7 @@
                         </div>
                     </form>
 
-                    <form class="action-card" th:if="${application.status.name() == 'CALLBACK_DONE'}" method="post" th:action="@{'/applications/' + ${application.id} + '/archive'}">
+                    <form class="action-card" th:if="${currentStatus != null and currentStatus.name() == 'CALLBACK_DONE'}" method="post" th:action="@{'/applications/' + ${terminationApplication.id} + '/archive'}">
                         <div class="action-head"><h3>归档</h3></div>
                         <div class="action-body">
                             <div class="toolbar">
