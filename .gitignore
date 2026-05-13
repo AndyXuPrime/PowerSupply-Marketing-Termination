@@ -1,4 +1,6 @@
-.mvn/
+.mvn/repository/
+.m2/
+data/
 target/
 *.class
 *.log

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="nav(active)">
+    <div class="topbar">
+        <div class="brand">
+            <strong>无表临时用电终止业务模块</strong>
+            <span>PowerSupply-Marketing-Termination</span>
+        </div>
+        <nav class="topnav">
+            <a class="nav-chip" th:classappend="${active == 'list'} ? ' active'" href="/applications">业务台账</a>
+            <a class="nav-chip" th:classappend="${active == 'new'} ? ' active'" href="/applications#new-form">新增受理</a>
+            <a class="nav-chip" href="/h2-console" target="_blank" rel="noreferrer">H2 控制台</a>
+        </nav>
+    </div>
+</header>
+</body>
+</html>
