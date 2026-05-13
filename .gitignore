@@ -2,6 +2,7 @@
 .m2/
 data/
 target/
+logs/
 *.class
 *.log
 *.iml
